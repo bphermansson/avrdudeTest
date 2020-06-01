@@ -20,7 +20,8 @@ MCU = atmega168
 # Target file name (without extension).
 TARGET = led_blink_2020
 
-# Programming hardware: type avrdude -c ?
+# Programming hardware: type 
+
 # to get a full listing.
 # AVRDUDE_PROGRAMMER = dapa              # official name of 
 AVRDUDE_PROGRAMMER = dragon_isp
