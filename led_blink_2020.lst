@@ -1,0 +1,127 @@
+   1               		.file	"led_blink_2020.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+ 104               		.section	.text.startup,"ax",@progbits
+ 106               	.global	main
+ 108               	main:
+ 109               		.stabd	46,0,0
+   1:led_blink_2020.c **** #include <avr/io.h>
+   2:led_blink_2020.c **** #include <avr/interrupt.h>
+   3:led_blink_2020.c ****  
+   4:led_blink_2020.c **** int main(void)
+   5:led_blink_2020.c **** {
+ 111               	.LM0:
+ 112               	.LFBB1:
+ 113               	/* prologue: function */
+ 114               	/* frame size = 0 */
+ 115               	/* stack size = 0 */
+ 116               	.L__stack_usage = 0
+   6:led_blink_2020.c ****  
+   7:led_blink_2020.c ****   //Setup the clock
+   8:led_blink_2020.c ****   cli();            //Disable global interrupts
+ 118               	.LM1:
+ 119               	/* #APP */
+ 120               	 ;  8 "led_blink_2020.c" 1
+ 121 0000 F894      		cli
+ 122               	 ;  0 "" 2
+   9:led_blink_2020.c ****   TCCR1B |= 1<<CS11 | 1<<CS10;  //Divide by 64
+ 124               	.LM2:
+ 125               	/* #NOAPP */
+ 126 0002 8091 8100 		lds r24,129
+ 127 0006 8360      		ori r24,lo8(3)
+ 128 0008 8093 8100 		sts 129,r24
+  10:led_blink_2020.c ****   OCR1A = 15624;        //Count 15624 cycles for 1 second interrupt
+ 130               	.LM3:
+ 131 000c 88E0      		ldi r24,lo8(8)
+ 132 000e 9DE3      		ldi r25,lo8(61)
+ 133 0010 9093 8900 		sts 136+1,r25
+ 134 0014 8093 8800 		sts 136,r24
+  11:led_blink_2020.c ****   TCCR1B |= 1<<WGM12;     //Put Timer/Counter1 in CTC mode
+ 136               	.LM4:
+ 137 0018 8091 8100 		lds r24,129
+ 138 001c 8860      		ori r24,lo8(8)
+ 139 001e 8093 8100 		sts 129,r24
+  12:led_blink_2020.c ****   TIMSK1 |= 1<<OCIE1A;        //enable timer compare interrupt
+ 141               	.LM5:
+ 142 0022 8091 6F00 		lds r24,111
+ 143 0026 8260      		ori r24,lo8(2)
+ 144 0028 8093 6F00 		sts 111,r24
+  13:led_blink_2020.c ****   sei();            //Enable global interrupts
+ 146               	.LM6:
+ 147               	/* #APP */
+ 148               	 ;  13 "led_blink_2020.c" 1
+ 149 002c 7894      		sei
+ 150               	 ;  0 "" 2
+  14:led_blink_2020.c ****  
+  15:led_blink_2020.c ****   //Setup the I/O for the LED
+  16:led_blink_2020.c ****  
+  17:led_blink_2020.c ****   DDRB |= (1<<0);     //Set PortD Pin0 as an output
+ 152               	.LM7:
+ 153               	/* #NOAPP */
+ 154 002e 209A      		sbi 0x4,0
+  18:led_blink_2020.c ****   PORTB |= (1<<0);        //Set PortD Pin0 high to turn on LED
+ 156               	.LM8:
+ 157 0030 289A      		sbi 0x5,0
+ 158               	.L2:
+ 159 0032 00C0      		rjmp .L2
+ 161               	.Lscope1:
+ 163               		.stabd	78,0,0
+ 164               		.text
+ 166               	.global	__vector_11
+ 168               	__vector_11:
+ 169               		.stabd	46,0,0
+  19:led_blink_2020.c ****  
+  20:led_blink_2020.c ****   while(1) { }          //Loop forever, interrupts do the rest
+  21:led_blink_2020.c **** }
+  22:led_blink_2020.c ****  
+  23:led_blink_2020.c **** ISR(TIMER1_COMPA_vect)      //Interrupt Service Routine
+  24:led_blink_2020.c **** {
+ 171               	.LM9:
+ 172               	.LFBB2:
+ 173 0000 1F92      		push r1
+ 174 0002 0F92      		push r0
+ 175 0004 0FB6      		in r0,__SREG__
+ 176 0006 0F92      		push r0
+ 177 0008 1124      		clr __zero_reg__
+ 178 000a 8F93      		push r24
+ 179 000c 9F93      		push r25
+ 180               	/* prologue: Signal */
+ 181               	/* frame size = 0 */
+ 182               	/* stack size = 5 */
+ 183               	.L__stack_usage = 5
+  25:led_blink_2020.c ****   PORTB ^= (1<<0);        //Use xor to toggle the LED
+ 185               	.LM10:
+ 186 000e 95B1      		in r25,0x5
+ 187 0010 81E0      		ldi r24,lo8(1)
+ 188 0012 8927      		eor r24,r25
+ 189 0014 85B9      		out 0x5,r24
+ 190               	/* epilogue start */
+  26:led_blink_2020.c **** }
+ 192               	.LM11:
+ 193 0016 9F91      		pop r25
+ 194 0018 8F91      		pop r24
+ 195 001a 0F90      		pop r0
+ 196 001c 0FBE      		out __SREG__,r0
+ 197 001e 0F90      		pop r0
+ 198 0020 1F90      		pop r1
+ 199 0022 1895      		reti
+ 201               	.Lscope2:
+ 203               		.stabd	78,0,0
+ 205               	.Letext0:
+ 206               		.ident	"GCC: (GNU) 5.4.0"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 led_blink_2020.c
+     /tmp/cch7sv38.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/cch7sv38.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/cch7sv38.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/cch7sv38.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cch7sv38.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cch7sv38.s:108    .text.startup:0000000000000000 main
+     /tmp/cch7sv38.s:168    .text:0000000000000000 __vector_11
+
+NO UNDEFINED SYMBOLS
