@@ -15,7 +15,8 @@
 # MCU = attiny13
 # MCU = attiny2313
 # MCU = atmega8
-MCU = atmega168
+# MCU = atmega168
+MCU = attiny45
 
 # Target file name (without extension).
 TARGET = led_blink_2020
@@ -24,7 +25,7 @@ TARGET = led_blink_2020
 
 # to get a full listing.
 # AVRDUDE_PROGRAMMER = dapa              # official name of 
-AVRDUDE_PROGRAMMER = dragon_isp
+AVRDUDE_PROGRAMMER = usbtiny
 
 AVRDUDE_PORT = usb			# linux for dragon
 #AVRDUDE_PORT = /dev/parport0           # linux
